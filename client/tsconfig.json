@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["./src/*"]
+      },
+
+      "esModuleInterop": true,  //Habilitar esModuleInterop
+      "skipLibCheck": true,      // Opcional: esto puede ayudar a evitar problemas con tipos de bibliotecas externas
+      "jsx": "react-jsx"  // habilitar JSX
+    },
+    "include": ["src/**/*"],  // Incluir todos los archivos de la carpeta `src`
+    "exclude": ["node_modules"]  // Excluir la carpeta node_modules
+  }
