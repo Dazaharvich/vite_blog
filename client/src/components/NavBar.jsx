@@ -26,14 +26,26 @@ const NavBar = () => {
         <div className="menu flex gap-6">
         <span>Jhon</span>
           <span>Logout</span>
-          <button class="btn relative inline-flex items-center justify-start overflow-hidden font-medium transition-all bg-indigo-100 rounded-lg hover:bg-white group py-1.5 px-2.5 border-neutral-400">
-            <span class="w-56 h-48 rounded-lg border-transparent bg-blue-600 absolute bottom-0 left-0 translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0 group-hover:border-neutral-400"></span>
-            <span class="border-transparent relative w-full text-left text-blue-700 transition-colors duration-300 ease-in-out group-hover:text-white group-hover:border-neutral-400">
-              <Link to="/crear" className="">
-                Crear Caso
-              </Link>
-            </span>
-          </button>
+          <Link to="/crear"
+                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Crear Caso
+                  <svg
+                    className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 10"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M1 5h12m0 0L9 1m4 4L9 9"
+                    />
+                  </svg>
+                </Link>
         </div>
       </div>
     </div>
