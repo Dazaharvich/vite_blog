@@ -11,4 +11,13 @@ export default defineConfig({
       // Si shadcn-ui utiliza algún alias que se necesite añadir
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8800',  // URL servidor backend
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
 })

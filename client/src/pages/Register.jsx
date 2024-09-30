@@ -20,7 +20,9 @@ const Register = () => {
     e.preventDefault()
 
     try{
-    const res = await axios.post("http://localhost:8800/api/auth/register", inputs)
+    const res = await axios.post("/auth/register", inputs, {  //"http://localhost:8800/api/auth/register"  --ruta completa
+      withCredentials: true, // Si estás manejando cookies o autenticación basada en sesiones
+    });
       console.log(res);
     }catch(err){
       console.log(err);

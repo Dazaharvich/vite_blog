@@ -1,5 +1,6 @@
 import { db } from "../db.js";
 import bcrypt from "bcryptjs";
+import mysql from "mysql2";
 
 
 export const register = (req,res)=>{
@@ -22,7 +23,6 @@ export const register = (req,res)=>{
         const values = [
             req.body.username,
             req.body.email,
-            req.body.password,
             hash,
         ]
 
