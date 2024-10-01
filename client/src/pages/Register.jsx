@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Register = () => {
@@ -12,6 +12,10 @@ const Register = () => {
     password: "",
   });
 
+  const [err, setErr] = useState(null);
+
+  const navigate = useNavigate();
+
   const handleChange = e => {
     setInputs(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -20,16 +24,16 @@ const Register = () => {
     e.preventDefault()
 
     try{
-    const res = await axios.post("/auth/register", inputs, {  //"http://localhost:8800/api/auth/register"  --ruta completa
+      await axios.post("/api/auth/register", inputs, {  //"http://localhost:8800/api/auth/register"  --ruta completa
       withCredentials: true, // Si estás manejando cookies o autenticación basada en sesiones
     });
-      console.log(res);
+    navigate("/login");
+    
     }catch(err){
-      console.log(err);
+      setErr(err.response.data)
     }
-  }
+  };
 
-  const [error, setError] = useState(null);
 
   return (
     <div>
@@ -58,7 +62,7 @@ const Register = () => {
             className="mt-4 mb-4 rounded-lg px-4 py-4 hover:cursor-pointer"
           />
           <Button onClick={handleSubmit} className="mt-4 mb-4 rounded-lg">Registrar</Button>
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {err && <p className="text-red-500 text-sm mt-2">{err}</p>}
           <div className="text-center mt-4">
             <span>¿Ya tienes una cuenta? <Link to="/login" className="text-blue-500 hover:underline">Iniciar sesión</Link></span>
           </div>
