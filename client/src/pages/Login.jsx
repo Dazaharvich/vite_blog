@@ -26,9 +26,7 @@ const Login = () => {
     e.preventDefault()
 
     try{
-      await axios.post("/api/auth/login", inputs, {  //"http://localhost:8800/api/auth/register"  --ruta completa
-      withCredentials: true, // Si estás manejando cookies o autenticación basada en sesiones
-    });
+      
     navigate("/");
     
     }catch(err){
