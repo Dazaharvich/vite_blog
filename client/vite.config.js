@@ -11,6 +11,9 @@ export default defineConfig({
       // Si shadcn-ui utiliza algún alias que se necesite añadir
     },
   },
+  esbuild: {
+    jsxInject: `import React from 'react'`, // Para evitar tener que importar React en cada archivo
+  },
   server: {
     proxy: {
       '/api': {
@@ -20,4 +23,6 @@ export default defineConfig({
       },
     },
   },
+
+  
 })

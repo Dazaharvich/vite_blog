@@ -1,16 +1,15 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import "../index.css";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/authContext.jsx";
 
 
 const Login = () => {
 
   const [inputs, setInputs] = useState({
     username: "",
-    email: "",
     password: "",
   });
 
@@ -18,19 +17,23 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const handleChange = e => {
-    setInputs(prev => ({ ...prev, [e.target.name]: e.target.value }));
+
+  const {currentUser} = useContext(AuthContext);
+
+  console.log(currentUser)
+
+  const handleChange = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault()
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     try{
-      
     navigate("/");
     
     }catch(err){
-      setErr(err.response.data)
+      setErr(err.response.data);
     }
   };
 
