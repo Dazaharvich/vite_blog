@@ -1,4 +1,4 @@
-import React from 'react'
+
 import Logo from "../public/img/hplus_logo.png"
 import Cpanel from "../public/img/cpanel.png"
 

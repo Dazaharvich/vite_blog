@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Link } from "react-router-dom";
 import {
   Card,
@@ -41,8 +41,8 @@ const Home = () => {
     <div className="home container mx-auto px-4 py-8">
       <div className="posts grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
         {posts.map((post) => (
-          <div className="">
-            <div key={post.id} className=" flex-col max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+          <div key={post.id} className="">
+            <div  className=" flex-col max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <Link to="{`/post/${post.id}`}">
                 <img
                   className="rounded-t-lg w-full h-48 sm:h-64 object-cover"
