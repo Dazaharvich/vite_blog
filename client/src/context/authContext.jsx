@@ -9,18 +9,18 @@ export const AuthContextProvider = ({ children }) => {
   );
 
   const login = async (inputs) => {
-    const res = await axios.post("/auth/login", inputs, {
-      //"http://localhost:8800/api/auth/register"  --ruta completa
-      withCredentials: true, // Si estás manejando cookies o autenticación basada en sesiones
-    });
+    const res = await axios.post("http://localhost:8800/api/auth/login", inputs,{
+        withCredentials: true, // Si estás manejando cookies o autenticación basada en sesiones
+      });
     setCurrentUser(res.data);
+    return res.data;
   };
 
   const logout = async (inputs) => {
-    await axios.post("/auth/logout"
-      //"http://localhost:8800/api/auth/register"  --ruta completa
-      //{withCredentials: true, // Si estás manejando cookies o autenticación basada en sesiones}
-      );
+    await axios.post("http://localhost:8800/api/auth/logout", {
+      withCredentials: true, // Si estás manejando sesiones
+    });
+      
     setCurrentUser(null);
   };
 

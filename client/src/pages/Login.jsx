@@ -18,9 +18,9 @@ const Login = () => {
   const navigate = useNavigate();
 
 
-  const {currentUser} = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
-  console.log(currentUser)
+
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -29,11 +29,18 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!inputs.username || !inputs.password) {
+      setErr("Por favor, completa todos los campos");
+      return;
+    }
+
     try{
+    await login(inputs);
     navigate("/");
     
     }catch(err){
-      setErr(err.response.data);
+      console.error(err);
+      setErr(err.response ? err.response.data : "Error de conexión al servidor");
     }
   };
 

@@ -32,8 +32,11 @@ export const login = (req, res) => {
   const q = "SELECT * FROM users WHERE username = ?";
 
   db.query(q, [req.body.username], (err, data) => {
-    if (err) return res.json(err);
-    if (data.length === 0) return res.status(404).json("User no existe");
+    if (err) {
+      console.log(err);
+      return res.json(err);
+    };
+    if (data.length === 0) return res.status(404).json("El usuario no existe");
 
     //CHECK PASSWORD
     // Load hash from your password DB.
@@ -48,13 +51,27 @@ export const login = (req, res) => {
     const token = jwt.sign({ id: data[0].id }, "jwtkey");
     const { password, ...other } = data[0];
 
+
+    // Configurar la cookie del token
+
     res
       .cookie("access_token", token, {
         httpOnly: true,
+        //secure: true, // Solo si estás usando HTTPS
+        sameSite: "none", // Permitir solicitudes entre sitios
       })
       .status(200)
       .json(other);
-  });
+  },
+
+  console.log("Datos de login recibidos:", req.body),
+  console.log("Datos recuperados de la base de datos:", data)
+)
 };
 
-export const logout = (req, res) => {};
+export const logout = (req, res) => {
+  res.clearCookie("access_token", {
+    sameSite: "none",
+    secure: true,
+  }).status(200).json("Usuario ha cerrado sesión correctamente.");
+};
