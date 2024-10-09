@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -13,17 +13,22 @@ import axios from "axios";
 const Home = () => {
   const [posts, setPosts] = useState([]);
 
+  const cat = useLocation().search;
+
+
+  console.log(location);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:8800/api/posts");
+        const res = await axios.get(`http://localhost:8800/api/posts${cat}`);
         setPosts(res.data);
       } catch (err) {
         console.log(err);
       }
     };
     fetchData();
-  }, []);
+  }, [cat]);
 
   /*   const posts = [
     {
@@ -53,7 +58,7 @@ const Home = () => {
   ]; */
 
   return (
-    <div className="home container mx-auto px-4 py-8">
+    <div className="home container mx-auto px-4 py-10">
       <div className="posts grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
         {posts.map((post) => (
           <div key={post.id} className="">

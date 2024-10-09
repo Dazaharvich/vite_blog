@@ -2,6 +2,17 @@ import Logo from "../public/img/hplus_logo.png";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext.jsx";
 import { useContext } from "react";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
+
+
+const categories = [
+  { id: 1, name: 'Correos', path: '?cat=correos'},
+  { id: 2, name: 'VPS', path: '?cat=vps'},
+  { id: 3, name: 'Wordpress', path: '?cat=wordpress'},
+  { id: 4, name: 'Seguridad', path: '?cat=seguridad'},
+];
 
 const NavBar = () => {
   const { currentUser, logout } = useContext(AuthContext);
@@ -17,16 +28,34 @@ const NavBar = () => {
         </div>
 
         {/* Menu */}
-        <div className="links flex gap-6">
-          <Link className="no-underline text-2xl hover:">Categorias</Link>
+        <div className="links flex gap-8 items-center">
+          {/* DropdownMenu for Categorias */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="text-xl flex items-center">
+                Categorias
+                <ChevronDownIcon className="ml-2" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {categories.map((category) => (
+                <DropdownMenuItem key={category.id} asChild>
+                  <Link to={`/${category.path}`}>
+                    {category.name}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Link
-            className="no-underline text-2xl"
+            className="no-underline text-xl"
             to="https://blog.hostingplus.cl/"
           >
             Blog
           </Link>
           <Link
-            className="no-underline text-2xl"
+            className="no-underline text-xl"
             to="https://www.hostingplus.cl/"
           >
             Hostingplus
