@@ -63,7 +63,7 @@ const Home = () => {
         {posts.map((post) => (
           <div key={post.id} className="">
             <div className=" flex-col max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-              <Link to="{`/post/${post.id}`}">
+              <Link to={`/post/${post.id}`}>
                 <img
                   className="rounded-t-lg w-full h-48 sm:h-64 object-cover"
                   src={post.img}

@@ -16,6 +16,7 @@ const SinglePost = () => {
   const location = useLocation();
 
   const postId = location.pathname.split("/")[2];
+  console.log(postId);
 
   const { currentUser } = useContext(AuthContext);
 
