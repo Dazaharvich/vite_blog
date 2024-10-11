@@ -51,8 +51,8 @@ const Login = () => {
     <div className='auth flex flex-col justify-center items-center h-screen '>
       <h1 className="text-4xl mb-8">Login</h1>
       <form className="rounded-lg shadow-lg shadow-cyan-500/50 p-8">
-      <Input type="text" placeholder="Username" name="username" onClick={handleChange} className="mt-4 mb-4 rounded-lg px-4 py-4 hover:cursor-pointer"/>
-      <Input type="password" placeholder="Password" name="password" onClick={handleChange} className="mt-4 mb-4 rounded-lg px-4 py-4 hover:cursor-pointer"/>
+      <Input type="text" placeholder="Username" name="username" onChange={handleChange} className="mt-4 mb-4 rounded-lg px-4 py-4 hover:cursor-pointer"/>
+      <Input type="password" placeholder="Password" name="password" onChange={handleChange} className="mt-4 mb-4 rounded-lg px-4 py-4 hover:cursor-pointer"/>
       <Button onClick={handleSubmit} className="mt-4 mb-4 rounded-lg">Login</Button>
       {err && <p className="text-red-500 text-sm mt-2">Hay un error en el usuario o la contraseña</p>}
       </form>

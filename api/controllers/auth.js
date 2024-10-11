@@ -31,12 +31,18 @@ export const login = (req, res) => {
 
   const q = "SELECT * FROM users WHERE username = ?";
 
+  console.log("Datos de login recibidos:", req.body),
+
   db.query(q, [req.body.username], (err, data) => {
     if (err) {
       console.log(err);
       return res.json(err);
     };
+
     if (data.length === 0) return res.status(404).json("El usuario no existe");
+
+    console.log("Datos recuperados de la base de datos:", data)
+
 
     //CHECK PASSWORD
     // Load hash from your password DB.
@@ -63,9 +69,7 @@ export const login = (req, res) => {
       .status(200)
       .json(other);
   },
-
-  console.log("Datos de login recibidos:", req.body),
-  console.log("Datos recuperados de la base de datos:", data)
+  
 )
 };
 

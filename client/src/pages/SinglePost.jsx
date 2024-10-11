@@ -1,6 +1,4 @@
-import Edit from "../public/img/icons8-editar-64.svg";
-import Delete from "../public/img/icons8-borrar-para-siempre-64.png";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
@@ -8,19 +6,34 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { AuthContext } from "../context/authContext";
 
+// Importar componentes de shadcn/ui
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+
+import EditIcon from "../public/img/icons8-editar-64.svg";
+import DeleteIcon from "../public/img/icons8-borrar-para-siempre-64.png";
+
 const SinglePost = () => {
   dayjs.extend(relativeTime);
 
   const [post, setPost] = useState({});
+  const [open, setOpen] = useState(false); // Estado para el diálogo
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   const postId = location.pathname.split("/")[2];
-  console.log(postId);
 
   const { currentUser } = useContext(AuthContext);
-
-  console.log(location);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,25 +49,38 @@ const SinglePost = () => {
     fetchData();
   }, [postId]);
 
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8800/api/posts/${postId}`, {
+        withCredentials: true, // Importante para enviar cookies
+      });
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col lg:flex-row gap-12">
-        {/* Post Content */}
-        <div className="content lg:flex-5">
-          {/* Featured Image */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
+        {/* Contenido del Post */}
+        <div className="content lg:col-span-4">
+          {/* Imagen Destacada */}
           <img
             className="w-full h-72 lg:h-96 object-cover rounded-lg shadow-md"
             src={post?.img}
             alt="Imagen destacada del post"
           />
 
-          {/* User Information and Post Controls */}
+          {/* Información del Usuario y Controles del Post */}
           <div className="user flex items-center gap-4 text-sm my-8">
-            <img
-              className="w-12 h-12 rounded-full object-cover"
-              src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Foto_Perfil_.jpg"
-              alt="Foto de perfil"
-            />
+            {post.userImg && (
+              <img
+                className="w-12 h-12 rounded-full object-cover"
+                src={post.userImg}
+                alt="Foto de perfil"
+              />
+            )}
             <div className="info">
               <span className="font-bold text-lg">{post.username}</span>
               <p className="text-gray-500">{dayjs(post.date).fromNow()}</p>
@@ -64,30 +90,58 @@ const SinglePost = () => {
                 <Link to={`/crear?edit=2`}>
                   <img
                     className="w-7 h-7 cursor-pointer bg-gray-200 hover:bg-gray-300 rounded-full p-1 shadow-md"
-                    src={Edit}
+                    src={EditIcon}
                     alt="Editar post"
                   />
                 </Link>
-                <img
-                  className="w-7 h-7 cursor-pointer bg-gray-200 hover:bg-gray-300 rounded-full p-1 shadow-md"
-                  src={Delete}
-                  alt="Eliminar post"
-                />
+
+                {/* Dialogo de Confirmación para Eliminar */}
+                <Dialog open={open} onOpenChange={setOpen}>
+                  <DialogTrigger asChild>
+                    <img
+                      className="w-7 h-7 cursor-pointer bg-gray-200 hover:bg-gray-300 rounded-full p-1 shadow-md"
+                      src={DeleteIcon}
+                      alt="Eliminar post"
+                    />
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Confirmar eliminación</DialogTitle>
+                      <DialogDescription>
+                        ¿Estás seguro de que deseas eliminar este post? Esta acción no se puede deshacer.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <Button
+                        variant="destructive"
+                        onClick={() => {
+                          handleDelete();
+                          setOpen(false);
+                        }}
+                      >
+                        Eliminar
+                      </Button>
+                      <DialogClose asChild>
+                        <Button variant="secondary">Cancelar</Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
             )}
           </div>
 
-          {/* Post Title */}
+          {/* Título del Post */}
           <h1 className="font-bold text-3xl lg:text-5xl mb-6">{post.title}</h1>
 
-          {/* Post Content */}
+          {/* Contenido del Post */}
           <div className="text-lg leading-relaxed text-gray-700 space-y-4">
             {post.desc}
           </div>
         </div>
 
-        {/* Sidebar or Additional Menu (Optional) */}
-        <div className="bg-slate-300 menu hidden lg:block lg:flex-2 p-4 rounded-lg shadow-md">
+        {/* Menú o Sidebar */}
+        <div className="menu bg-slate-100 hidden lg:block lg:col-span-1 p-4 rounded-lg shadow-md">
           <Menu />
         </div>
       </div>
