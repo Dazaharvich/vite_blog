@@ -1,6 +1,6 @@
 
-import Logo from "../public/img/hplus_logo.png"
-import Cpanel from "../public/img/cpanel.png"
+import Logo from "/img/hplus_logo.png"
+import Cpanel from "/img/cpanel.png"
 
 const Footer = () => {
   return (

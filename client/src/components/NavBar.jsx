@@ -1,4 +1,4 @@
-import Logo from "../public/img/hplus_logo.png";
+import Logo from "/img/hplus_logo.png";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext.jsx";
 import { useContext } from "react";

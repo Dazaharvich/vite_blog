@@ -5,6 +5,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { AuthContext } from "../context/authContext";
+import DOMPurify from "dompurify";
 
 // Importar componentes de shadcn/ui
 import {
@@ -19,8 +20,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-import EditIcon from "../public/img/icons8-editar-64.svg";
-import DeleteIcon from "../public/img/icons8-borrar-para-siempre-64.png";
+import EditIcon from "/img/icons8-editar-64.svg";
+import DeleteIcon from "/img/icons8-borrar-para-siempre-64.png";
 
 const SinglePost = () => {
   dayjs.extend(relativeTime);
@@ -60,6 +61,11 @@ const SinglePost = () => {
     }
   };
 
+  const getText = (html) => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent;
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
@@ -68,7 +74,7 @@ const SinglePost = () => {
           {/* Imagen Destacada */}
           <img
             className="w-full h-72 lg:h-96 object-cover rounded-lg shadow-md"
-            src={post?.img}
+            src={`/uploads/${post?.img}`}
             alt="Imagen destacada del post"
           />
 
@@ -87,7 +93,7 @@ const SinglePost = () => {
             </div>
             {currentUser?.username === post.username && (
               <div className="edit flex gap-3 ml-auto">
-                <Link to={`/crear?edit=2`}>
+                <Link to={`/crear?edit=2`} state={post}>
                   <img
                     className="w-7 h-7 cursor-pointer bg-gray-200 hover:bg-gray-300 rounded-full p-1 shadow-md"
                     src={EditIcon}
@@ -108,7 +114,8 @@ const SinglePost = () => {
                     <DialogHeader>
                       <DialogTitle>Confirmar eliminación</DialogTitle>
                       <DialogDescription>
-                        ¿Estás seguro de que deseas eliminar este post? Esta acción no se puede deshacer.
+                        ¿Estás seguro de que deseas eliminar este post? Esta
+                        acción no se puede deshacer.
                       </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -136,13 +143,17 @@ const SinglePost = () => {
 
           {/* Contenido del Post */}
           <div className="text-lg leading-relaxed text-gray-700 space-y-4">
-            {post.desc}
+            <p
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(post.desc),
+              }}
+            ></p>
           </div>
         </div>
 
         {/* Menú o Sidebar */}
         <div className="menu bg-slate-100 hidden lg:block lg:col-span-1 p-4 rounded-lg shadow-md">
-          <Menu />
+          <Menu cat={post.cat} />
         </div>
       </div>
     </div>
