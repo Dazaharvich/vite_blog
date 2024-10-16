@@ -6,6 +6,9 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
+// Importar componentes de shadcn/ui
+import { Button } from "@/components/ui/button";
+
 const Write = () => {
   const navigate = useNavigate();
   const state = useLocation().state;
@@ -22,7 +25,7 @@ const Write = () => {
         "http://localhost:8800/api/uploads",
         formData,
         {
-          withCredentials: true, // Si estás manejando cookies o autenticación basada en sesiones
+          withCredentials: true, // Manejo de cookies o autenticación basada en sesiones
         }
       );
       return res.data;
@@ -95,7 +98,7 @@ const Write = () => {
         </div>
 
         {/* Create Menu */}
-        <div className="menu w-1/5 lg:flex-2 flex flex-col gap-6">
+        <div className="menu w-full lg:w-1/5 flex flex-col gap-6">
           {/* Publicar Options */}
           <div className="item bg-slate-900 p-6 rounded-lg shadow-md">
             <h3 className="font-bold text-lg mb-4">Publicar</h3>
@@ -106,30 +109,41 @@ const Write = () => {
               <b>Visibilidad: </b> Publicado
             </span>
 
-            <input
-              className="hidden"
-              type="file"
-              name=""
-              id="file"
-              onChange={(e) => setFile(e.target.files[0])}
-            />
-            <label
-              htmlFor="file"
-              className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-            >
-              Subir Imagen
-            </label>
+            <div>
+              {/* Input para subir imagen oculto */}
+              <input
+                className="hidden"
+                type="file"
+                name="file"
+                id="file"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+
+              {/* Botón estilizado que actúa como label */}
+              <Button
+                asChild
+                variant="outline"
+                className="w-full hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+              >
+                <label htmlFor="file" className="w-full cursor-pointer">
+                  Subir Imagen
+                </label>
+              </Button>
+            </div>
             {/* Buttons */}
             <div className="mt-14 gap-4 flex flex-col">
-              <button className="bg-blue-500 px-4 py-2 rounded-md hover:bg-gray-400 transition">
+              <Button
+                variant="ghost"
+                className="hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+              >
                 Guardar Borrador
-              </button>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+              </Button>
+              <Button
+                className="text-white hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
                 onClick={handleClick}
               >
                 Publicar
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -137,62 +151,22 @@ const Write = () => {
           <div className="item bg-slate-900 p-6 rounded-lg shadow-md">
             <h3 className="font-bold text-lg mb-4">Categoría</h3>
             <div className="flex flex-wrap gap-4">
-              <div className="flex items-center gap-2">
-                <input
-                  className="cursor-pointer"
-                  type="radio"
-                  checked={cat === "vps"}
-                  name="category"
-                  value="vps"
-                  id="vps"
-                  onChange={(e) => setCat(e.target.value)}
-                />
-                <label htmlFor="vps" className="cursor-pointer">
-                  VPS
-                </label>
-              </div>
-              <div className="flex items-center gap-2">
-                <input
-                  className="cursor-pointer"
-                  type="radio"
-                  checked={cat === "correos"}
-                  name="category"
-                  value="correos"
-                  id="correos"
-                  onChange={(e) => setCat(e.target.value)}
-                />
-                <label htmlFor="correos" className="cursor-pointer">
-                  Correos
-                </label>
-              </div>
-              <div className="flex items-center gap-2">
-                <input
-                  className="cursor-pointer"
-                  type="radio"
-                  checked={cat === "wordpress"}
-                  name="category"
-                  value="wordpress"
-                  id="wordpress"
-                  onChange={(e) => setCat(e.target.value)}
-                />
-                <label htmlFor="wordpress" className="cursor-pointer">
-                  Wordpress
-                </label>
-              </div>
-              <div className="flex items-center gap-2">
-                <input
-                  className="cursor-pointer"
-                  type="radio"
-                  checked={cat === "seguridad"}
-                  name="category"
-                  value="seguridad"
-                  id="seguridad"
-                  onChange={(e) => setCat(e.target.value)}
-                />
-                <label htmlFor="seguridad" className="cursor-pointer">
-                  Seguridad
-                </label>
-              </div>
+              {["vps", "correos", "wordpress", "seguridad"].map((category) => (
+                <div key={category} className="flex items-center gap-2">
+                  <input
+                    className="cursor-pointer"
+                    type="radio"
+                    checked={cat === category}
+                    name="category"
+                    value={category}
+                    id={category}
+                    onChange={(e) => setCat(e.target.value)}
+                  />
+                  <label htmlFor={category} className="cursor-pointer">
+                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
         </div>

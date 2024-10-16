@@ -1,98 +1,273 @@
 import Logo from "/img/hplus_logo.png";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext.jsx";
-import { useContext } from "react";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { useContext, useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { ChevronDown, Menu, X } from "lucide-react";
+
+
+// Importar componentes de diálogo de shadcn/ui
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+
+// Importar sheets de shadcn/ui
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+  SheetClose,
+} from "@/components/ui/sheet";
 
 
 const categories = [
-  { id: 1, name: 'Correos', path: '?cat=correos'},
-  { id: 2, name: 'VPS', path: '?cat=vps'},
-  { id: 3, name: 'Wordpress', path: '?cat=wordpress'},
-  { id: 4, name: 'Seguridad', path: '?cat=seguridad'},
+  { id: 1, name: "Correos", path: "?cat=correos" },
+  { id: 2, name: "VPS", path: "?cat=vps" },
+  { id: 3, name: "Wordpress", path: "?cat=wordpress" },
+  { id: 4, name: "Seguridad", path: "?cat=seguridad" },
 ];
 
 const NavBar = () => {
   const { currentUser, logout } = useContext(AuthContext);
+  const [openDialog, setOpenDialog] = useState(false); // Estado para controlar el diálogo de Logout
+
+  const handleLogout = () => {
+    logout();
+    setOpenDialog(false);
+  };
 
   return (
-    <div>
-      <div className="container px-3 flex justify-evenly items-center">
+    <div className="bg-slate-900 shadow-md">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
         <div className="logo">
           <Link to="/">
-            <img src={Logo} alt="hplus_logo" className="max-h-80 max-w-80" />
+            <img src={Logo} alt="hplus_logo" className="h-20 w-auto" />
           </Link>
         </div>
 
-        {/* Menu */}
-        <div className="links flex gap-8 items-center">
-          {/* DropdownMenu for Categorias */}
+        {/* Menú Desktop */}
+        <div className="hidden md:flex md:items-center md:gap-6">
+          {/* DropdownMenu for Categorías */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="text-xl flex items-center">
-                Categorias
-                <ChevronDownIcon className="ml-2" />
+              <Button
+                className="text-base  flex items-center focus:outline-none focus:ring-1 focus:ring-gray-300 hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+              >
+                Categorías
+                <ChevronDown className="ml-1" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {categories.map((category) => (
                 <DropdownMenuItem key={category.id} asChild>
-                  <Link to={`/${category.path}`}>
-                    {category.name}
-                  </Link>
+                  <Link to={`/${category.path}`}>{category.name}</Link>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Link
-            className="no-underline text-xl"
-            to="https://blog.hostingplus.cl/"
-          >
-            Blog
+          {/* Enlaces */}
+          <Link to="https://blog.hostingplus.cl/">
+            <Button
+              variant="ghost"
+              className="text-base hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+            >
+              Blog
+            </Button>
           </Link>
-          <Link
-            className="no-underline text-xl"
-            to="https://www.hostingplus.cl/"
-          >
-            Hostingplus
+          <Link to="https://www.hostingplus.cl/">
+            <Button
+              variant="ghost"
+              className="text-base hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full mr-32"
+            >
+              Hostingplus
+            </Button>
+          </Link>
+
+          {/* User Menu */}
+          {currentUser ? (
+            <>
+              <span className="text-base">{currentUser.username}</span>
+
+              {/* Dialogo de Confirmación para Logout */}
+              <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="text-base hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+                  >
+                    Logout
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Confirmar cierre de sesión</DialogTitle>
+                    <DialogDescription>
+                      ¿Estás seguro de que deseas cerrar sesión?
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <Button variant="destructive" onClick={handleLogout}>
+                      Cerrar sesión
+                    </Button>
+                    <DialogClose asChild>
+                      <Button variant="secondary">Cancelar</Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </>
+          ) : (
+            <Link to="/login">
+              <Button
+                variant="outline"
+                className="text-base hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+              >
+                Login
+              </Button>
+            </Link>
+          )}
+          <Link to="/crear">
+            <Button
+              className="text-base hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+            >
+              Crear Caso
+            </Button>
           </Link>
         </div>
 
-        {/* User Menú */}
-        <div className="menu flex gap-6">
-          <span>{currentUser?.username}</span>
-          {currentUser ? (
-            <span onClick={logout}>Logout</span>
-          ) : (
-            <Link className="no-underline text-2xl hover:" to="/login">
-              Login
-            </Link>
-          )}
-          <Link
-            to="/crear"
-            className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Crear Caso
-            <svg
-              className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 10"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M1 5h12m0 0L9 1m4 4L9 9"
-              />
-            </svg>
-          </Link>
+        {/* Menú Móvil */}
+        <div className="md:hidden">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" className="p-2">
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="bg-white">
+              <SheetHeader>
+                <SheetTitle>
+                  <Link to="/">
+                    <img src={Logo} alt="hplus_logo" className="h-12 w-auto" />
+                  </Link>
+                </SheetTitle>
+                <SheetDescription>
+                  <Button variant="ghost" className="p-2" asChild>
+                    <SheetClose asChild>
+                      <X className="h-6 w-6" />
+                    </SheetClose>
+                  </Button>
+                </SheetDescription>
+              </SheetHeader>
+              <div className="mt-8 flex flex-col gap-4">
+                {/* Categorías */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      className="text-base flex items-center justify-between w-full focus:outline-none focus:ring-1 focus:ring-gray-300 hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+                    >
+                      Categorías
+                      <ChevronDown className="ml-2" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    {categories.map((category) => (
+                      <DropdownMenuItem key={category.id} asChild>
+                        <Link to={`/${category.path}`}>{category.name}</Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                {/* Enlaces */}
+                <Link to="https://blog.hostingplus.cl/">
+                  <Button
+                    variant="ghost"
+                    className="text-base w-full hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+                  >
+                    Blog
+                  </Button>
+                </Link>
+                <Link to="https://www.hostingplus.cl/">
+                  <Button
+                    variant="ghost"
+                    className="text-base w-full hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+                  >
+                    Hostingplus
+                  </Button>
+                </Link>
+
+                {/* User Menu */}
+                {currentUser ? (
+                  <>
+                    <span className="text-base">{currentUser.username}</span>
+
+                    {/* Dialogo de Confirmación para Logout */}
+                    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="text-base w-full hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+                        >
+                          Logout
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Confirmar cierre de sesión</DialogTitle>
+                          <DialogDescription>
+                            ¿Estás seguro de que deseas cerrar sesión?
+                          </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                          <Button variant="destructive" onClick={handleLogout}>
+                            Cerrar sesión
+                          </Button>
+                          <DialogClose asChild>
+                            <Button variant="secondary">Cancelar</Button>
+                          </DialogClose>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </>
+                ) : (
+                  <Link to="/login">
+                    <Button
+                      variant="outline"
+                      className="text-base w-full hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+                    >
+                      Login
+                    </Button>
+                  </Link>
+                )}
+                <Link to="/crear">
+                  <Button
+                    className="text-base w-full hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+                  >
+                    Crear Caso
+                  </Button>
+                </Link>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </div>

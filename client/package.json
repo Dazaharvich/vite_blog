@@ -26,11 +26,11 @@
     "react-dom": "^18.2.0",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.26.2",
-    "shadcn-ui": "^0.9.1",
-    "tailwind-merge": "^2.5.2",
+    "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@shadcn/ui": "^0.0.4",
     "@types/node": "^22.6.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",

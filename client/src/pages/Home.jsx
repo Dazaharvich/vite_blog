@@ -12,6 +12,7 @@ import axios from "axios";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const cat = useLocation().search;
 
@@ -27,43 +28,75 @@ const Home = () => {
     fetchData();
   }, [cat]);
 
+  const getText = (html) => {
+    if (!html) return "";
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || "";
+  };
 
 
-const getText = (html) => {
-  const doc = new DOMParser().parseFromString(html, "text/html")
-  return doc.body.textContent
-}
+    // Filtrar los posts según la búsqueda
+    const filteredPosts = posts.filter((post) => {
+      const query = searchQuery.toLowerCase();
+      const title = post.title.toLowerCase();
+      const desc = getText(post.desc).toLowerCase();
+      const category = post.cat ? post.cat.toLowerCase() : "";
+  
+      return (
+        title.includes(query) ||
+        desc.includes(query) ||
+        category.includes(query)
+      );
+    });
 
 
-  return (
-    <div className="home container mx-auto px-4 py-10">
-      <div className="posts grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
-        {posts.map((post) => (
-          <div key={post.id} className="">
-            <div className=" flex-col max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    return (
+      <div className="container mx-auto px-4 py-10">
+        {/* Contenedor del título y la barra de búsqueda */}
+        <div className="mt-3 mb-20 flex flex-col md:flex-row items-center justify-between gap-4">
+          <Link to="/" className="font-bold text-4xl md:text-5xl text-white">
+            Knowledge <span className="text-primary">Base</span>
+          </Link>
+          {/* Barra de búsqueda */}
+          <div className="w-full md:w-1/2 lg:w-1/3">
+            <input
+              type="text"
+              placeholder="Buscar..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full p-2 rounded-md bg-slate-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
+        </div>
+        {/* Grid de tarjetas */}
+        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredPosts.map((post) => (
+            <Card key={post.id} className="bg-slate-900 text-white">
               <Link to={`/post/${post.id}`}>
                 <img
-                  className="rounded-t-lg w-full h-48 sm:h-64 object-cover"
+                  className="rounded-t-lg w-full h-48 object-cover"
                   src={`/uploads/${post?.img}`}
-                  alt=""
+                  alt={post.title}
                 />
               </Link>
-              <div className="p-5">
-                <Link to={`/post/${post.id}`}>
-                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold">
+                  <Link to={`/post/${post.id}`} className="hover:underline">
                     {post.title}
-                  </h5>
-                </Link>
-                <p className="my-5 font-normal text-gray-700 dark:text-gray-400">
-                  {getText(post.desc)}
-                </p>
+                  </Link>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="mb-4">
+                  {getText(post.desc).substring(0, 100)}...
+                </CardDescription>
                 <Link
                   to={`/post/${post.id}`}
-                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  className="inline-flex items-center text-sm font-medium text-primary hover:underline"
                 >
-                  Read more
+                  Leer más
                   <svg
-                    className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                    className="rtl:rotate-180 w-4 h-4 ml-1"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -78,13 +111,12 @@ const getText = (html) => {
                     />
                   </svg>
                 </Link>
-              </div>
-            </div>
-          </div>
-        ))}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
-    </div>
-  );
-};
-
-export default Home;
+    );
+  };
+  
+  export default Home;
