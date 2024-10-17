@@ -54,8 +54,8 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <div className="app flex justify-center w-full">
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <div className="app flex justify-center w-full ">
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme" className="bg-white text-black dark:bg-slate-900 dark:text-white">
         {/* <div className="container"> */}
           <RouterProvider router={router} />
         {/* </div> */}

@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Menu, X } from "lucide-react";
-
+//Dark mode selector
+import { ModeToggle } from "@/components/mode-toggle";
 
 // Importar componentes de diálogo de shadcn/ui
 import {
@@ -36,7 +37,6 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 
-
 const categories = [
   { id: 1, name: "Correos", path: "?cat=correos" },
   { id: 2, name: "VPS", path: "?cat=vps" },
@@ -55,7 +55,7 @@ const NavBar = () => {
 
   return (
     <div className="bg-slate-900 shadow-md">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div className="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
         {/* Logo */}
         <div className="logo">
           <Link to="/">
@@ -68,9 +68,7 @@ const NavBar = () => {
           {/* DropdownMenu for Categorías */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                className="text-base  flex items-center focus:outline-none focus:ring-1 focus:ring-gray-300 hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
-              >
+              <Button className="text-base bg-[#225ed8] flex items-center focus:outline-none focus:ring-1 focus:ring-gray-300 hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full">
                 Categorías
                 <ChevronDown className="ml-1" />
               </Button>
@@ -146,12 +144,14 @@ const NavBar = () => {
             </Link>
           )}
           <Link to="/crear">
-            <Button
-              className="text-base hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
-            >
+            <Button className="text-base hover:shadow-[0_0_10px_rgb(0,255,255)] bg-[#225ed8] transition-shadow duration-300 rounded-full">
               Crear Caso
             </Button>
           </Link>
+          <div className="flex items-center">
+            {/* Otros elementos */}
+            <ModeToggle />
+          </div>
         </div>
 
         {/* Menú Móvil */}
@@ -179,11 +179,9 @@ const NavBar = () => {
               </SheetHeader>
               <div className="mt-8 flex flex-col gap-4">
                 {/* Categorías */}
-                <DropdownMenu>
+                <DropdownMenu className="transition-opacity duration-300 opacity-0 group-hover:opacity-100">
                   <DropdownMenuTrigger asChild>
-                    <Button
-                      className="text-base flex items-center justify-between w-full focus:outline-none focus:ring-1 focus:ring-gray-300 hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
-                    >
+                    <Button className="text-base flex items-center justify-between w-full focus:outline-none focus:ring-1 focus:ring-gray-300 hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full">
                       Categorías
                       <ChevronDown className="ml-2" />
                     </Button>
@@ -259,9 +257,7 @@ const NavBar = () => {
                   </Link>
                 )}
                 <Link to="/crear">
-                  <Button
-                    className="text-base w-full hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
-                  >
+                  <Button className="text-base w-full hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full">
                     Crear Caso
                   </Button>
                 </Link>

@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 
 @layer base {
@@ -33,7 +35,7 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 222, 47%, 11%;
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
@@ -67,5 +69,12 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* font-family: 'Inter', sans-serif; */
+  }
+
+  h2{
+    font-weight: bold;
+    font-size: 2rem;
+    color: powderblue;
   }
 }

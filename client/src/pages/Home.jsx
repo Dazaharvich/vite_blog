@@ -69,9 +69,9 @@ const Home = () => {
           </div>
         </div>
         {/* Grid de tarjetas */}
-        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-32">
           {filteredPosts.map((post) => (
-            <Card key={post.id} className="bg-slate-900 text-white">
+            <Card key={post.id} className="bg-slate-900 text-white shadow-lg shadow-cyan-500/50">
               <Link to={`/post/${post.id}`}>
                 <img
                   className="rounded-t-lg w-full h-48 object-cover"

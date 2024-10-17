@@ -67,8 +67,8 @@ const SinglePost = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
+    <div className="container mx-auto px-4 py-8 mt-10">
+      <div className="grid grid-cols-1 lg:grid-cols-6 gap-20">
         {/* Contenido del Post */}
         <div className="content lg:col-span-4">
           {/* Imagen Destacada */}
@@ -87,15 +87,15 @@ const SinglePost = () => {
                 alt="Foto de perfil"
               />
             )}
-            <div className="info">
+            <div className="info mb-10">
               <span className="font-bold text-lg">{post.username}</span>
-              <p className="text-gray-500">{dayjs(post.date).fromNow()}</p>
+              <p className="text-gray-400">{dayjs(post.date).fromNow()}</p>
             </div>
             {currentUser?.username === post.username && (
-              <div className="edit flex gap-3 ml-auto">
+              <div className="edit flex gap-8 ml-auto">
                 <Link to={`/crear?edit=2`} state={post}>
                   <img
-                    className="w-7 h-7 cursor-pointer bg-gray-200 hover:bg-gray-300 rounded-full p-1 shadow-md"
+                    className="w-9 h-9 cursor-pointer bg-gray-200 hover:w-11 hover:h-11 p-1 focus:outline-none focus:ring-1 focus:ring-gray-300 hover:shadow-[0_0_10px_rgb(0,255,255)] transition-all duration-300 rounded-full"
                     src={EditIcon}
                     alt="Editar post"
                   />
@@ -105,7 +105,7 @@ const SinglePost = () => {
                 <Dialog open={open} onOpenChange={setOpen}>
                   <DialogTrigger asChild>
                     <img
-                      className="w-7 h-7 cursor-pointer bg-gray-200 hover:bg-gray-300 rounded-full p-1 shadow-md"
+                      className="w-9 h-9 cursor-pointer bg-gray-200 hover:w-11 hover:h-11 p-1 focus:outline-none focus:ring-1 focus:ring-gray-300 hover:shadow-[0_0_10px_rgb(0,255,255)] transition-all duration-300 rounded-full"
                       src={DeleteIcon}
                       alt="Eliminar post"
                     />
@@ -139,10 +139,10 @@ const SinglePost = () => {
           </div>
 
           {/* Título del Post */}
-          <h1 className="font-bold text-3xl lg:text-5xl mb-6">{post.title}</h1>
+          <h1 className="font-bold text-3xl lg:text-5xl mb-6 ">{post.title}</h1>
 
           {/* Contenido del Post */}
-          <div className="text-lg leading-relaxed text-gray-400 space-y-4">
+          <div className="text-lg leading-relaxed dark:text-gray-300 space-y-4 light:text-gray-600">
             <p
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(post.desc),
@@ -152,8 +152,13 @@ const SinglePost = () => {
         </div>
 
         {/* Menú o Sidebar */}
-        <div className="menu bg-slate-400 hidden lg:block lg:col-span-1 p-4 rounded-lg shadow-md max-h-fit">
-          <Menu cat={post.cat} />
+        <div className="menu lg:col-span-2">
+          <div className="bg-slate-900 p-6 rounded-lg shadow-md">
+            <h2 className="font-bold text-2xl mb-4 text-white">
+              Posts Relacionados
+            </h2>
+            <Menu cat={post.cat} />
+          </div>
         </div>
       </div>
     </div>

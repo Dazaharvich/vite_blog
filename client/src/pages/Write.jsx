@@ -17,6 +17,8 @@ const Write = () => {
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState(state?.cat || "");
 
+  console.log(state); // Agrega esta línea para depurar
+
   const upload = async () => {
     try {
       const formData = new FormData();
@@ -36,7 +38,11 @@ const Write = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    const imgUrl = file ? await upload() : "";
+    const imgUrl = file 
+    ? await upload()
+    : typeof state?.img === "string" 
+    ? state.img
+    : "";
 
     try {
       state
@@ -47,7 +53,7 @@ const Write = () => {
               title,
               desc: value,
               cat,
-              img: file ? imgUrl : "",
+              img: imgUrl,
             },
             {
               withCredentials: true, // Asegura que las cookies se envíen
@@ -60,7 +66,7 @@ const Write = () => {
               title,
               desc: value,
               cat,
-              img: file ? imgUrl : "",
+              img: imgUrl,
               date: dayjs(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
             },
             {
@@ -132,14 +138,14 @@ const Write = () => {
             </div>
             {/* Buttons */}
             <div className="mt-14 gap-4 flex flex-col">
-              <Button
+              {/* <Button
                 variant="ghost"
                 className="hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
               >
                 Guardar Borrador
-              </Button>
+              </Button> */}
               <Button
-                className="text-white hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+                className="text-white bg-[#225ed8] hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
                 onClick={handleClick}
               >
                 Publicar
@@ -150,7 +156,7 @@ const Write = () => {
           {/* Categoría Options */}
           <div className="item bg-slate-900 p-6 rounded-lg shadow-md">
             <h3 className="font-bold text-lg mb-4">Categoría</h3>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-col gap-4">
               {["vps", "correos", "wordpress", "seguridad"].map((category) => (
                 <div key={category} className="flex items-center gap-2">
                   <input

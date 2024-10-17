@@ -22,8 +22,8 @@ const Menu = ({ cat }) => {
 
   
     return (
-      <div className="flex flex-col gap-8">
-        <h2 className="text-2xl font-bold mb-4 text-sky-950">Posts Relacionados</h2>
+      <div className="flex flex-col gap-8 mt-10">
+        {/* <h2 className="text-2xl font-bold mb-4 text-sky-950">Posts Relacionados</h2> */}
         {posts.map((post) => (
           <div className="flex items-start gap-4" key={post.id}>
             {/* Imagen del post */}
@@ -34,7 +34,7 @@ const Menu = ({ cat }) => {
             />
             <div className="flex flex-col">
               {/* Título del post */}
-              <h3 className=" text-stone-800 text-lg font-semibold">{post.title}</h3>
+              <h3 className=" text-slate-200 text-lg font-semibold">{post.title}</h3>
               {/* Botón Leer Más */}
               <Link to={`/post/${post.id}`}>
                 <button className="mt-2 text-blue-500 hover:underline font-semibold">
