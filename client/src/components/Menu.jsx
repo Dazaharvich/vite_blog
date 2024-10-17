@@ -37,7 +37,7 @@ const Menu = ({ cat }) => {
               <h3 className=" text-stone-800 text-lg font-semibold">{post.title}</h3>
               {/* Botón Leer Más */}
               <Link to={`/post/${post.id}`}>
-                <button className="mt-2 text-blue-500 hover:underline">
+                <button className="mt-2 text-blue-500 hover:underline font-semibold">
                   Leer Más...
                 </button>
               </Link>

@@ -27,7 +27,7 @@ app.options("http://localhost:5173", (req, res) => {
 app.use(
   cors({
     origin: "http://localhost:5173", // Especifica el origen permitido (frontend)
-    methods: ["GET", "POST", "PUT", "DELETE"], // Métodos HTTP permitidos
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Métodos HTTP permitidos
     credentials: true, // Permitir cookies y encabezados relacionados
   })
 );

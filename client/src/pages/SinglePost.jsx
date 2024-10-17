@@ -142,7 +142,7 @@ const SinglePost = () => {
           <h1 className="font-bold text-3xl lg:text-5xl mb-6">{post.title}</h1>
 
           {/* Contenido del Post */}
-          <div className="text-lg leading-relaxed text-gray-700 space-y-4">
+          <div className="text-lg leading-relaxed text-gray-400 space-y-4">
             <p
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(post.desc),
@@ -152,7 +152,7 @@ const SinglePost = () => {
         </div>
 
         {/* Menú o Sidebar */}
-        <div className="menu bg-slate-100 hidden lg:block lg:col-span-1 p-4 rounded-lg shadow-md">
+        <div className="menu bg-slate-400 hidden lg:block lg:col-span-1 p-4 rounded-lg shadow-md max-h-fit">
           <Menu cat={post.cat} />
         </div>
       </div>
