@@ -142,13 +142,22 @@ const SinglePost = () => {
           <h1 className="font-bold text-3xl lg:text-5xl mb-6 ">{post.title}</h1>
 
           {/* Contenido del Post */}
-          <div className="text-lg leading-relaxed dark:text-gray-300 space-y-4 light:text-gray-600">
-            <p
+          {/* <div className="text-lg leading-relaxed dark:text-gray-300 space-y-4 light:text-gray-600"> */}
+            <div
+              className="prose dark:prose-invert max-w-none"
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(post.desc),
+                __html: DOMPurify.sanitize(post.desc, {
+                  ADD_TAGS: ["iframe"], // Permitir etiquetas adicionales si es necesario
+                  ADD_ATTR: [
+                    "allow",
+                    "allowfullscreen",
+                    "frameborder",
+                    "scrolling",
+                  ],
+                }),
               }}
-            ></p>
-          </div>
+            ></div>
+          {/* </div> */}
         </div>
 
         {/* Menú o Sidebar */}
