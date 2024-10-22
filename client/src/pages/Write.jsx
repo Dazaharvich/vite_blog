@@ -7,10 +7,39 @@ import dayjs from "dayjs";
 // Importar componentes de shadcn/ui
 import { Button } from "@/components/ui/button";
 
+//Importar botones de menu herramientas de Editor de Texto
+import {
+  FaBold,
+  FaItalic,
+  FaUnderline,
+  FaImage,
+  FaCode,
+  FaListOl,
+  FaListUl,
+  FaLink,
+  FaAlignLeft,
+  FaAlignCenter,
+  FaAlignRight,
+} from "react-icons/fa";
+
+//Importar Dialog desde ShadcnUi
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+
 // Importar TipTap y extensiones necesarias
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import CodeBlock from "@tiptap/extension-code-block";
+import TextAlign from "@tiptap/extension-text-align";
 
 const Write = () => {
   const navigate = useNavigate();
@@ -19,13 +48,24 @@ const Write = () => {
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState(state?.cat || "");
 
+  //Estados para validar Insercion de URL
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+  const [linkUrl, setLinkUrl] = useState("");
+
+  //Estado para desactivar Botones mientras se sube una imagen
+  const [isUploading, setIsUploading] = useState(false);
+
   // Configurar el editor de TipTap
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Image.configure({
-        // Opciones de configuración de la extensión Image
+      Image,
+      Link,
+      CodeBlock,
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
       }),
+      // Puedes agregar más extensiones si es necesario
     ],
     content: state?.desc || "",
   });
@@ -93,34 +133,76 @@ const Write = () => {
   };
 
   // Función para agregar imágenes dentro del editor
-  const addImage = () => {
+  const addImage = async () => {
+    if (isUploading) return; // Evita múltiples clics
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
     input.onchange = async () => {
       const file = input.files[0];
-      if (file) {
-        // Crear FormData y subir la imagen al servidor
-        const formData = new FormData();
-        formData.append("file", file);
 
-        try {
-          const res = await axios.post(
-            "http://localhost:8800/api/uploads",
-            formData,
-            {
-              withCredentials: true,
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          );
+      if (!file) {
+        // El usuario canceló la selección del archivo
+        return;
+      }
 
+      // Iniciar carga
+      setIsUploading(true);
+
+      // Validar el tipo de archivo
+      if (!file.type.startsWith("image/")) {
+        alert("Por favor, selecciona un archivo de imagen válido.");
+        return;
+      }
+
+      // Validar el tamaño del archivo (opcional, por ejemplo, máximo 20MB)
+      const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSizeInBytes) {
+        alert("La imagen es demasiado grande. El tamaño máximo es de 5MB.");
+        return;
+      }
+
+      // Crear FormData y subir la imagen al servidor
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const res = await axios.post(
+          "http://localhost:8800/api/uploads",
+          formData,
+          {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        // Validar la respuesta del servidor
+        if (res.status === 200 && res.data) {
           const imageUrl = `http://localhost:8800/uploads/${res.data}`;
-          editor.chain().focus().setImage({ src: imageUrl }).run();
-        } catch (err) {
-          console.error(err);
+          // Insertar la imagen en el editor
+          try {
+            editor.chain().focus().setImage({ src: imageUrl }).run();
+          } catch (error) {
+            console.error("Error al insertar la imagen en el editor:", error);
+            alert(
+              "Ocurrió un error al insertar la imagen. Por favor, intenta de nuevo."
+            );
+          }
+        } else {
+          alert(
+            "Ocurrió un error al subir la imagen. Por favor, intenta de nuevo."
+          );
         }
+      } catch (err) {
+        console.error("Error al subir la imagen:", err);
+        alert(
+          "Ocurrió un error al subir la imagen. Por favor, intenta de nuevo."
+        );
+      } finally {
+        // Finalizar carga
+        setIsUploading(false);
       }
     };
     input.click();
@@ -134,6 +216,33 @@ const Write = () => {
       }
     };
   }, [editor]);
+
+  //Funcion para modal de URL
+  const openLinkModal = () => {
+    setLinkUrl("");
+    setIsLinkModalOpen(true);
+  };
+
+  //Funcion para Validar inserción de Link
+  const handleInsertLink = () => {
+    if (linkUrl.trim() === "") {
+      alert("La URL no puede estar vacía.");
+      return;
+    }
+
+    try {
+      const validatedUrl = new URL(linkUrl);
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .setLink({ href: validatedUrl.href })
+        .run();
+      setIsLinkModalOpen(false);
+    } catch (err) {
+      alert("Por favor, ingresa una URL válida.");
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -151,33 +260,129 @@ const Write = () => {
           {/* Editor TipTap */}
           <div className="mt-6">
             {/* Barra de herramientas personalizada */}
-            <div className="mb-4 flex gap-2">
+            <div className="mb-4 flex gap-2 flex-wrap">
+              {/* Negrita */}
               <Button
                 variant="outline"
                 onClick={() => editor.chain().focus().toggleBold().run()}
                 className={editor.isActive("bold") ? "bg-gray-300" : ""}
               >
-                Negrita
+                <FaBold />
               </Button>
+
+              {/* Cursiva */}
               <Button
                 variant="outline"
                 onClick={() => editor.chain().focus().toggleItalic().run()}
                 className={editor.isActive("italic") ? "bg-gray-300" : ""}
               >
-                Cursiva
+                <FaItalic />
               </Button>
+
+              {/* Subrayado */}
               <Button
                 variant="outline"
                 onClick={() => editor.chain().focus().toggleUnderline().run()}
                 className={editor.isActive("underline") ? "bg-gray-300" : ""}
               >
-                Subrayado
+                <FaUnderline />
               </Button>
-              <Button variant="outline" onClick={addImage}>
-                Agregar Imagen
+
+              {/* Agregar Imagen */}
+              <Button variant="outline" onClick={addImage} disabled={isUploading}>
+                <FaImage />
               </Button>
-              {/* Agrega más botones según tus necesidades */}
+
+              {/* Insertar Código */}
+              <Button
+                variant="outline"
+                onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+                className={editor.isActive("codeBlock") ? "bg-gray-300" : ""}
+              >
+                <FaCode />
+              </Button>
+
+              {/* Lista Ordenada */}
+              <Button
+                variant="outline"
+                onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                className={editor.isActive("orderedList") ? "bg-gray-300" : ""}
+              >
+                <FaListOl />
+              </Button>
+
+              {/* Lista Desordenada */}
+              <Button
+                variant="outline"
+                onClick={() => editor.chain().focus().toggleBulletList().run()}
+                className={editor.isActive("bulletList") ? "bg-gray-300" : ""}
+              >
+                <FaListUl />
+              </Button>
+
+              {/* Añadir Enlace */}
+              <Button
+                variant="outline"
+                onClick={openLinkModal}
+                className={editor.isActive("link") ? "bg-gray-300" : ""}
+              >
+                <FaLink />
+              </Button>
+
+              {/* Herramientas de Formato de Texto */}
+              {/* Encabezado */}
+              <Button
+                variant="outline"
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 2 }).run()
+                }
+                className={
+                  editor.isActive("heading", { level: 2 }) ? "bg-gray-300" : ""
+                }
+              >
+                H2
+              </Button>
+
+              {/* Alinear a la Izquierda */}
+              <Button
+                variant="outline"
+                onClick={() =>
+                  editor.chain().focus().setTextAlign("left").run()
+                }
+                className={
+                  editor.isActive({ textAlign: "left" }) ? "bg-gray-300" : ""
+                }
+              >
+                <FaAlignLeft />
+              </Button>
+
+              {/* Centrar */}
+              <Button
+                variant="outline"
+                onClick={() =>
+                  editor.chain().focus().setTextAlign("center").run()
+                }
+                className={
+                  editor.isActive({ textAlign: "center" }) ? "bg-gray-300" : ""
+                }
+              >
+                <FaAlignCenter />
+              </Button>
+
+              {/* Alinear a la Derecha */}
+              <Button
+                variant="outline"
+                onClick={() =>
+                  editor.chain().focus().setTextAlign("right").run()
+                }
+                className={
+                  editor.isActive({ textAlign: "right" }) ? "bg-gray-300" : ""
+                }
+              >
+                <FaAlignRight />
+              </Button>
             </div>
+
             {/* Contenido del editor */}
             <EditorContent
               editor={editor}
@@ -185,6 +390,37 @@ const Write = () => {
             />
           </div>
         </div>
+
+        {/* Modal para insertar enlace */}
+        {isLinkModalOpen && (
+          <Dialog open={isLinkModalOpen} onOpenChange={setIsLinkModalOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Insertar Enlace</DialogTitle>
+                <DialogDescription>
+                  Ingresa la URL a la que deseas enlazar.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Input
+                  type="text"
+                  value={linkUrl}
+                  onChange={(e) => setLinkUrl(e.target.value)}
+                  placeholder="https://ejemplo.com"
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsLinkModalOpen(false)}
+                >
+                  Cancelar
+                </Button>
+                <Button onClick={handleInsertLink}>Insertar Enlace</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
 
         {/* Create Menu */}
         <div className="menu w-full lg:w-1/5 flex flex-col gap-6">
