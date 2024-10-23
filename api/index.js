@@ -1,4 +1,5 @@
 import express from "express";
+import dotenv from "dotenv";
 import postRoutes from "./routes/posts.js";
 import userRoutes from "./routes/users.js";
 import authRoutes from "./routes/auth.js";
@@ -7,6 +8,10 @@ import cookieParser from "cookie-parser";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
+
+
+// Cargar variables de entorno desde .env
+dotenv.config(); 
 
 // Definir __filename y __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -17,18 +22,14 @@ const app = express();
 
 // Configurar CORS
 const corsOptions = {
-  origin: "http://localhost:5173", // URL de tu frontend
+  origin: process.env.FRONTEND_URL || "http://localhost:5173", // Variable de entorno
   credentials: true, // Permitir cookies y encabezados relacionados
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Métodos HTTP permitidos
 };
 
 // Configuración de CORS para permitir solicitudes de localhost:5173
 app.use(
-  cors({
-    origin: "http://localhost:5173", // Especifica el origen permitido (frontend)
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Métodos HTTP permitidos
-    credentials: true, // Permitir cookies y encabezados relacionados
-  })
-);
+  cors(corsOptions));
 
 // Middleware para analizar JSON y cookies
 app.use(express.json());
@@ -61,6 +62,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/users", userRoutes);
 
 // Iniciar el servidor
-app.listen(8800, () => {
-  console.log("Connected!");
+const PORT = process.env.PORT || 8800;
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
 });

@@ -1,1 +1,13 @@
+# Node.js
 node_modules
+.env
+.env.local
+.env.development
+.env.production
+
+# Si usas Yarn o npm
+yarn.lock
+package-lock.json
+
+# Vite
+dist

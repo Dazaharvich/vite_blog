@@ -8,9 +8,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useState, useEffect } from "react";
-import axios from "axios";
+//import axios from "axios";
+import axios from "@/axiosConfig";
 
 const Home = () => {
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const [posts, setPosts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -19,7 +23,7 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:8800/api/posts${cat}`);
+        const res = await axios.get(`/api/posts${cat}`);
         setPosts(res.data);
       } catch (err) {
         console.log(err);
@@ -54,7 +58,7 @@ const Home = () => {
       <div className="container mx-auto px-4 py-10">
         {/* Contenedor del título y la barra de búsqueda */}
         <div className="mt-3 mb-20 flex flex-col md:flex-row items-center justify-between gap-4">
-          <Link to="/" className="font-bold text-4xl md:text-5xl text-white">
+          <Link to="/" className="font-bold text-4xl md:text-5xl dark:text-white light:text-black">
             Knowledge <span className="text-primary">Base</span>
           </Link>
           {/* Barra de búsqueda */}
@@ -75,7 +79,7 @@ const Home = () => {
               <Link to={`/post/${post.id}`}>
                 <img
                   className="rounded-t-lg w-full h-48 object-cover"
-                  src={`/uploads/${post?.img}`}
+                  src={`${backendUrl}/uploads/${post?.img}`}
                   alt={post.title}
                 />
               </Link>
@@ -87,7 +91,7 @@ const Home = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="mb-4">
+                <CardDescription className="mb-4 break-words whitespace-normal">
                   {getText(post.desc).substring(0, 100)}...
                 </CardDescription>
                 <Link

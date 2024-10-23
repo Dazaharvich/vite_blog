@@ -1,11 +1,16 @@
+import { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
-import { useContext, useEffect, useState } from "react";
-import axios from "axios";
+//import axios from "axios";
+import axios from "@/axiosConfig";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { AuthContext } from "../context/authContext";
 import DOMPurify from "dompurify";
+import parse from "html-react-parser";
+//PhotoView Lightbox
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import "react-photo-view/dist/react-photo-view.css";
 
 // Importar componentes de shadcn/ui
 import {
@@ -26,22 +31,63 @@ import DeleteIcon from "/img/icons8-borrar-para-siempre-64.png";
 const SinglePost = () => {
   dayjs.extend(relativeTime);
 
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  //variables de estado
   const [post, setPost] = useState({});
   const [open, setOpen] = useState(false); // Estado para el diálogo
 
+  const { currentUser } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
 
   const postId = location.pathname.split("/")[2];
 
-  const { currentUser } = useContext(AuthContext);
+  // Sanitizar el contenido del post
+  const sanitizedContent = DOMPurify.sanitize(post.desc, {
+    ADD_TAGS: ["iframe"], // Permitir etiquetas adicionales si es necesario
+    ADD_ATTR: [
+      "allow",
+      "allowfullscreen",
+      "frameborder",
+      "scrolling",
+      "class",
+      "style",
+    ],
+  });
+
+   // Función para reemplazar las imágenes por PhotoView
+   const options = {
+    replace: (domNode) => {
+      if (domNode.name === "img") {
+        let src = domNode.attribs.src;
+        const alt = domNode.attribs.alt || "";
+
+        // Ajustar la URL de la imagen si es relativa
+        if (src.startsWith("/uploads/")) {
+          src = `${backendUrl}${src}`;
+        } else if (src.startsWith("uploads/")) {
+          src = `${backendUrl}/${src}`;
+        }
+
+        // Asegurarse de que devolvemos el componente
+        return (
+          <PhotoView src={src}>
+            <img
+              src={src}
+              alt={alt}
+              style={{ maxWidth: "100%", cursor: "pointer" }}
+            />
+          </PhotoView>
+        );
+      }
+    },
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:8800/api/posts/${postId}`
-        );
+        const res = await axios.get(`/api/posts/${postId}`);
         setPost(res.data);
       } catch (err) {
         console.log(err);
@@ -50,9 +96,10 @@ const SinglePost = () => {
     fetchData();
   }, [postId]);
 
+  //Función Delete
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8800/api/posts/${postId}`, {
+      await axios.delete(`/api/posts/${postId}`, {
         withCredentials: true, // Importante para enviar cookies
       });
       navigate("/");
@@ -66,17 +113,21 @@ const SinglePost = () => {
     return doc.body.textContent;
   };
 
+  
+
   return (
     <div className="container mx-auto px-4 py-8 mt-10">
       <div className="grid grid-cols-1 lg:grid-cols-6 gap-20">
         {/* Contenido del Post */}
         <div className="content lg:col-span-4">
           {/* Imagen Destacada */}
-          <img
-            className="w-full h-72 lg:h-96 object-cover rounded-lg shadow-md"
-            src={`/uploads/${post?.img}`}
-            alt="Imagen destacada del post"
-          />
+          {post.img && (
+            <img
+              className="w-full h-72 lg:h-96 object-cover rounded-lg shadow-md"
+              src={`${backendUrl}/uploads/${post.img}`}
+              alt="Imagen destacada del post"
+            />
+          )}
 
           {/* Información del Usuario y Controles del Post */}
           <div className="user flex items-center gap-4 text-sm my-8">
@@ -142,22 +193,11 @@ const SinglePost = () => {
           <h1 className="font-bold text-3xl lg:text-5xl mb-6 ">{post.title}</h1>
 
           {/* Contenido del Post */}
-          {/* <div className="text-lg leading-relaxed dark:text-gray-300 space-y-4 light:text-gray-600"> */}
-            <div
-              className="prose dark:prose-invert max-w-none"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(post.desc, {
-                  ADD_TAGS: ["iframe"], // Permitir etiquetas adicionales si es necesario
-                  ADD_ATTR: [
-                    "allow",
-                    "allowfullscreen",
-                    "frameborder",
-                    "scrolling",
-                  ],
-                }),
-              }}
-            ></div>
-          {/* </div> */}
+          <PhotoProvider>
+            <div className="editor-content prose dark:prose-invert max-w-none">
+              {parse(sanitizedContent, options)}
+            </div>
+          </PhotoProvider>
         </div>
 
         {/* Menú o Sidebar */}
@@ -166,7 +206,7 @@ const SinglePost = () => {
             <h2 className="font-bold text-2xl mb-4 text-white">
               Posts Relacionados
             </h2>
-            <Menu cat={post.cat} />
+            {post.cat && <Menu cat={post.cat} />}
           </div>
         </div>
       </div>

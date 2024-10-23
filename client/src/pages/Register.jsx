@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+//import axios from "axios";
+import axios from "@/axiosConfig";
 
 const Register = () => {
   const [inputs, setInputs] = useState({
@@ -23,7 +24,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:8800/api/auth/register", inputs, {
+      await axios.post("/api/auth/register", inputs, {
         //"http://localhost:8800/api/auth/register"  --ruta completa
         withCredentials: true, // Si estás manejando cookies o autenticación basada en sesiones
       });

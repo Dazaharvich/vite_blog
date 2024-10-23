@@ -86,7 +86,7 @@ const NavBar = () => {
           <Link to="https://blog.hostingplus.cl/">
             <Button
               variant="ghost"
-              className="text-base hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+              className="text-base text-slate-100 hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
             >
               Blog
             </Button>
@@ -94,7 +94,7 @@ const NavBar = () => {
           <Link to="https://www.hostingplus.cl/">
             <Button
               variant="ghost"
-              className="text-base hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full mr-32"
+              className="text-base text-slate-100 hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full mr-32"
             >
               Hostingplus
             </Button>
@@ -103,7 +103,7 @@ const NavBar = () => {
           {/* User Menu */}
           {currentUser ? (
             <>
-              <span className="text-base">{currentUser.username}</span>
+              <span className="username text-base">{currentUser.username}</span>
 
               {/* Dialogo de Confirmación para Logout */}
               <Dialog open={openDialog} onOpenChange={setOpenDialog}>
@@ -155,14 +155,14 @@ const NavBar = () => {
         </div>
 
         {/* Menú Móvil */}
-        <div className="md:hidden">
+        <div className="md:hidden bg-slate-900 movil-menu">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" className="p-2">
-                <Menu className="h-6 w-6" />
+                <Menu className="h-6 w-6 " />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-white">
+            <SheetContent side="right" className="bg-slate-900">
               <SheetHeader>
                 <SheetTitle>
                   <Link to="/">
@@ -207,7 +207,7 @@ const NavBar = () => {
                 <Link to="https://www.hostingplus.cl/">
                   <Button
                     variant="ghost"
-                    className="text-base w-full hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+                    className="text-base w-1/2 hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
                   >
                     Hostingplus
                   </Button>
@@ -216,7 +216,7 @@ const NavBar = () => {
                 {/* User Menu */}
                 {currentUser ? (
                   <>
-                    <span className="text-base">{currentUser.username}</span>
+                    <span className="text-base font-bold"><p className="bg-slate-50 text-slate-100 font-bold">{currentUser.username}</p></span>
 
                     {/* Dialogo de Confirmación para Logout */}
                     <Dialog open={openDialog} onOpenChange={setOpenDialog}>

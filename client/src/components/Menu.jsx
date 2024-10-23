@@ -1,8 +1,11 @@
-import axios from "axios";
+//import axios from "axios";
+import axios from "@/axiosConfig";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Menu = ({ cat }) => {
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const [posts, setPosts] = useState([]);
 
@@ -11,7 +14,7 @@ const Menu = ({ cat }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:8800/api/posts/?cat=${cat}`);
+        const res = await axios.get(`${backendUrl}/api/posts/?cat=${cat}`);
         setPosts(res.data);
       } catch (err) {
         console.log(err);
@@ -29,7 +32,7 @@ const Menu = ({ cat }) => {
             {/* Imagen del post */}
             <img
               className="w-24 h-24 lg:w-32 lg:h-32 object-cover rounded-lg shadow-md"
-              src={`/uploads/${post?.img}`}
+              src={`${backendUrl}/uploads/${post?.img}`}
               alt="Imagen destacada del post relacionado"
             />
             <div className="flex flex-col">

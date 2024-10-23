@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import axios from "axios";
+//import axios from "axios";
+import axios from "@/axiosConfig";
 import { useLocation, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
@@ -75,13 +76,9 @@ const Write = () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await axios.post(
-        "http://localhost:8800/api/uploads",
-        formData,
-        {
-          withCredentials: true, // Manejo de cookies o autenticación basada en sesiones
-        }
-      );
+      const res = await axios.post("/api/uploads", formData, {
+        withCredentials: true, // Manejo de cookies o autenticación basada en sesiones
+      });
       return res.data;
     } catch (err) {
       console.log(err);
@@ -101,7 +98,7 @@ const Write = () => {
       state
         ? // Actualizar un post existente
           await axios.patch(
-            `http://localhost:8800/api/posts/${state.id}`,
+            `/api/posts/${state.id}`,
             {
               title,
               desc: editor.getHTML(),
@@ -114,7 +111,7 @@ const Write = () => {
           )
         : // Crear un nuevo post
           await axios.post(
-            `http://localhost:8800/api/posts`,
+            `/api/posts`,
             {
               title,
               desc: editor.getHTML(),
@@ -167,20 +164,16 @@ const Write = () => {
       formData.append("file", file);
 
       try {
-        const res = await axios.post(
-          "http://localhost:8800/api/uploads",
-          formData,
-          {
-            withCredentials: true,
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const res = await axios.post("/api/uploads", formData, {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
         // Validar la respuesta del servidor
         if (res.status === 200 && res.data) {
-          const imageUrl = `http://localhost:8800/uploads/${res.data}`;
+          const imageUrl = `/api/uploads/${res.data}`;
           // Insertar la imagen en el editor
           try {
             editor.chain().focus().setImage({ src: imageUrl }).run();
@@ -289,7 +282,11 @@ const Write = () => {
               </Button>
 
               {/* Agregar Imagen */}
-              <Button variant="outline" onClick={addImage} disabled={isUploading}>
+              <Button
+                variant="outline"
+                onClick={addImage}
+                disabled={isUploading}
+              >
                 <FaImage />
               </Button>
 
@@ -384,10 +381,15 @@ const Write = () => {
             </div>
 
             {/* Contenido del editor */}
-            <EditorContent
-              editor={editor}
-              className="border rounded-lg p-4 min-h-[400px]"
-            />
+            <div
+              className="editor-wrapper border rounded-lg p-4 min-h-[400px]"
+              onClick={() => editor?.chain().focus().run()}
+            >
+              <EditorContent
+                editor={editor}
+                className="editor-content"
+              />
+            </div>
           </div>
         </div>
 
