@@ -43,6 +43,8 @@ import CodeBlock from "@tiptap/extension-code-block";
 import TextAlign from "@tiptap/extension-text-align";
 
 const Write = () => {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const navigate = useNavigate();
   const state = useLocation().state;
   const [title, setTitle] = useState(state?.title || "");
@@ -76,7 +78,7 @@ const Write = () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await axios.post("/api/uploads", formData, {
+      const res = await axios.post(`${backendUrl}/api/uploads`, formData, {
         withCredentials: true, // Manejo de cookies o autenticación basada en sesiones
       });
       return res.data;
@@ -98,7 +100,7 @@ const Write = () => {
       state
         ? // Actualizar un post existente
           await axios.patch(
-            `/api/posts/${state.id}`,
+            `${backendUrl}/api/posts/${state.id}`,
             {
               title,
               desc: editor.getHTML(),
@@ -111,7 +113,7 @@ const Write = () => {
           )
         : // Crear un nuevo post
           await axios.post(
-            `/api/posts`,
+            `${backendUrl}/api/posts`,
             {
               title,
               desc: editor.getHTML(),
@@ -141,6 +143,7 @@ const Write = () => {
       if (!file) {
         // El usuario canceló la selección del archivo
         return;
+        
       }
 
       // Iniciar carga
@@ -149,6 +152,7 @@ const Write = () => {
       // Validar el tipo de archivo
       if (!file.type.startsWith("image/")) {
         alert("Por favor, selecciona un archivo de imagen válido.");
+        setIsUploading(false);
         return;
       }
 
@@ -156,6 +160,7 @@ const Write = () => {
       const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
       if (file.size > maxSizeInBytes) {
         alert("La imagen es demasiado grande. El tamaño máximo es de 5MB.");
+        setIsUploading(false);
         return;
       }
 
@@ -164,7 +169,7 @@ const Write = () => {
       formData.append("file", file);
 
       try {
-        const res = await axios.post("/api/uploads", formData, {
+        const res = await axios.post(`${backendUrl}/api/uploads`, formData, {
           withCredentials: true,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -179,6 +184,7 @@ const Write = () => {
             editor.chain().focus().setImage({ src: imageUrl }).run();
           } catch (error) {
             console.error("Error al insertar la imagen en el editor:", error);
+            setIsUploading(false);
             alert(
               "Ocurrió un error al insertar la imagen. Por favor, intenta de nuevo."
             );
@@ -190,6 +196,7 @@ const Write = () => {
         }
       } catch (err) {
         console.error("Error al subir la imagen:", err);
+        setIsUploading(false);
         alert(
           "Ocurrió un error al subir la imagen. Por favor, intenta de nuevo."
         );
@@ -427,7 +434,7 @@ const Write = () => {
         {/* Create Menu */}
         <div className="menu w-full lg:w-1/5 flex flex-col gap-6">
           {/* Publicar Options */}
-          <div className="item bg-slate-900 p-6 rounded-lg shadow-md">
+          <div className="item bg-slate-900 p-6 rounded-lg shadow-xl text-slate-100">
             <h3 className="font-bold text-lg mb-4">Publicar</h3>
             <span className="block mb-2">
               <b>Status: </b> Borrador
@@ -452,7 +459,7 @@ const Write = () => {
                 variant="outline"
                 className="w-full hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
               >
-                <label htmlFor="file" className="w-full cursor-pointer">
+                <label htmlFor="file" className="w-full cursor-pointer dark:text-slate-100 light:text-slate-900">
                   Subir Imagen Destacada
                 </label>
               </Button>
@@ -469,7 +476,7 @@ const Write = () => {
           </div>
 
           {/* Categoría Options */}
-          <div className="item bg-slate-900 p-6 rounded-lg shadow-md">
+          <div className="item bg-slate-900 p-6 rounded-xl shadow-lg text-slate-100">
             <h3 className="font-bold text-lg mb-4">Categoría</h3>
             <div className="flex flex-col gap-4">
               {["vps", "correos", "wordpress", "seguridad"].map((category) => (

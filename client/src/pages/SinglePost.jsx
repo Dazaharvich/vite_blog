@@ -190,11 +190,12 @@ const SinglePost = () => {
           </div>
 
           {/* Título del Post */}
-          <h1 className="font-bold text-3xl lg:text-5xl mb-6 ">{post.title}</h1>
+          <div className="shadow-2xl pb-1 pl-3"><h1 className="font-bold text-3xl lg:text-5xl mb-6 ">{post.title}</h1></div>
+          
 
           {/* Contenido del Post */}
           <PhotoProvider>
-            <div className="editor-content prose dark:prose-invert max-w-none">
+            <div className="editor-content prose dark:prose-invert max-w-none mt-10 text-xl">
               {parse(sanitizedContent, options)}
             </div>
           </PhotoProvider>
@@ -202,7 +203,7 @@ const SinglePost = () => {
 
         {/* Menú o Sidebar */}
         <div className="menu lg:col-span-2">
-          <div className="bg-slate-900 p-6 rounded-lg shadow-md">
+          <div className="bg-slate-950 px-6 pb-10 pt-6  rounded-lg shadow-md">
             <h2 className="font-bold text-2xl mb-4 text-white">
               Posts Relacionados
             </h2>

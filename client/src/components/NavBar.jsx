@@ -54,7 +54,7 @@ const NavBar = () => {
   };
 
   return (
-    <div className="bg-slate-900 shadow-md">
+    <div className="bg-slate-950 shadow-lg shadow-gray-800">
       <div className="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
         {/* Logo */}
         <div className="logo">
@@ -166,13 +166,13 @@ const NavBar = () => {
               <SheetHeader>
                 <SheetTitle>
                   <Link to="/">
-                    <img src={Logo} alt="hplus_logo" className="h-12 w-auto" />
+                    <img src={Logo} alt="hplus_logo" className="h-24 w-auto" />
                   </Link>
                 </SheetTitle>
                 <SheetDescription>
                   <Button variant="ghost" className="p-2" asChild>
                     <SheetClose asChild>
-                      <X className="h-6 w-6" />
+                      {/* <X className="h-6 w-6" /> */}
                     </SheetClose>
                   </Button>
                 </SheetDescription>
@@ -207,7 +207,7 @@ const NavBar = () => {
                 <Link to="https://www.hostingplus.cl/">
                   <Button
                     variant="ghost"
-                    className="text-base w-1/2 hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+                    className="text-base w-full hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
                   >
                     Hostingplus
                   </Button>
@@ -216,7 +216,7 @@ const NavBar = () => {
                 {/* User Menu */}
                 {currentUser ? (
                   <>
-                    <span className="text-base font-bold"><p className="bg-slate-50 text-slate-100 font-bold">{currentUser.username}</p></span>
+                    <span className="text-base font-bold mx-auto"><p className=" text-slate-100 font-bold">{currentUser.username}</p></span>
 
                     {/* Dialogo de Confirmación para Logout */}
                     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
