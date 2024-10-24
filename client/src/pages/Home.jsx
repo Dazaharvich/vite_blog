@@ -14,6 +14,7 @@ import axios from "@/axiosConfig";
 const Home = () => {
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  console.log("FRONTEND_URL:", process.env.FRONTEND_URL);
 
   const [posts, setPosts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");

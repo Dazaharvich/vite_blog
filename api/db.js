@@ -1,4 +1,5 @@
 import mysql from "mysql2";
+import dotenv from "dotenv";
 
 export const db = mysql.createConnection({
     host: "localhost",
@@ -7,9 +8,11 @@ export const db = mysql.createConnection({
     database:"knowledgebase",
 })
 
-/* export const db = mysql.createConnection({
-    host: "localhost",
-    user: "hpluscl_bk",
-    password: "@}{86QQc-xBR",
-    database:"hpluscl_bk",
-}) */
+/* dotenv.config();
+
+export const db = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+}); */

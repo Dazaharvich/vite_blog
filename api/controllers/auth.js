@@ -61,7 +61,7 @@ export const login = (req, res) => {
       res
         .cookie("access_token", token, {
           httpOnly: true,
-          //secure: true, // Solo si estás usando HTTPS
+          secure: true, // Solo si estás usando HTTPS
           sameSite: "lax", // Permitir solicitudes entre sitios
         })
         .status(200)
@@ -73,7 +73,7 @@ export const logout = (req, res) => {
   res
     .clearCookie("access_token", {
       sameSite: "lax",
-      //secure: true, // Solo si estás usando HTTPS
+      secure: true, // Solo si estás usando HTTPS
     })
     .status(200)
     .json("Usuario ha cerrado sesión correctamente.");

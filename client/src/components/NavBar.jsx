@@ -54,7 +54,7 @@ const NavBar = () => {
   };
 
   return (
-    <div className="bg-slate-950 shadow-lg shadow-gray-800">
+    <div className="bg-slate-950 shadow-lg shadow-gray-800 text-slate-100">
       <div className="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
         {/* Logo */}
         <div className="logo">
@@ -155,7 +155,7 @@ const NavBar = () => {
         </div>
 
         {/* Menú Móvil */}
-        <div className="md:hidden bg-slate-900 movil-menu">
+        <div className="md:hidden bg-slate-900 movil-menu text-slate-100">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" className="p-2">
@@ -199,7 +199,7 @@ const NavBar = () => {
                 <Link to="https://blog.hostingplus.cl/">
                   <Button
                     variant="ghost"
-                    className="text-base w-full hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+                    className="text-base w-full hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full  text-slate-100"
                   >
                     Blog
                   </Button>
@@ -207,7 +207,7 @@ const NavBar = () => {
                 <Link to="https://www.hostingplus.cl/">
                   <Button
                     variant="ghost"
-                    className="text-base w-full hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full"
+                    className="text-base w-full hover:shadow-[0_0_10px_rgb(0,255,255)] transition-shadow duration-300 rounded-full  text-slate-100"
                   >
                     Hostingplus
                   </Button>

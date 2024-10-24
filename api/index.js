@@ -22,7 +22,7 @@ const app = express();
 
 // Configurar CORS
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:5173", // Variable de entorno
+  origin: process.env.FRONTEND_URL, // Variable de entorno
   credentials: true, // Permitir cookies y encabezados relacionados
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Métodos HTTP permitidos
 };
@@ -62,7 +62,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/users", userRoutes);
 
 // Iniciar el servidor
-const PORT = process.env.PORT || 8800;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
